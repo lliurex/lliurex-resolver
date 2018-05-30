@@ -1,6 +1,6 @@
 Format-Specification: http://wiki.debian.org/Proposals/CopyrightFormat?action=recall&rev=143
 Upstream-Name: lliurex-resolver
-Upstream-Source: http://lliurex.net
+Upstream-Source: http://github.com/lliurex/lliurex-resolver
 
 Files: *
 Copyright: Copyright © 2014 Enrique Medina Gremaldos <quiqueiii@gmail.com>
