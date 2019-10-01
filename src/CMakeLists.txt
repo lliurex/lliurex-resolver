@@ -1,9 +1,15 @@
 
+set(APP_NAME lliurex-resolver)
 
-add_executable(lliurex-resolver main.cpp)
-target_link_libraries(lliurex-resolver apt-pkg)
-add_definitions(-std=c++11 -g -O2)
+find_Library(APT_PKG_LIB apt-pkg)
 
-install(TARGETS lliurex-resolver RUNTIME DESTINATION bin)
+if (NOT APT_PKG_LIB)
+    message(FATAL_ERROR "libapt-pkg not found")
+endif()
+
+add_executable(${APP_NAME} main.cpp)
+target_link_libraries(${APP_NAME} ${APT_PKG_LIB})
+
+install(TARGETS ${APP_NAME} RUNTIME DESTINATION bin)
 
 
