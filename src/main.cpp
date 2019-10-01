@@ -37,12 +37,12 @@ class Application
 {
     public:
 
-    map < string, string > bootstrap;
-    map < string, string > depmap;
-    map < string, vector < string > >prvmap;
-    map < string, string > virtuals;
-    vector < pkgCache::DepIterator > multiples;
-    map < string, string > banmap;
+    map <string,string> bootstrap;
+    map <string,string> depmap;
+    map <string,vector <string> >prvmap;
+    map <string,string> virtuals;
+    vector <pkgCache::DepIterator> multiples;
+    map <string,string> banmap;
 
     string filename;
     bool dump_provide;
@@ -64,9 +64,8 @@ class Application
         dump_provide = false;
         add_bootstrap = false;
 
-
         if (argc < 2) {
-            PrintUsage();
+            print_usage();
             return;
         }
 
@@ -128,7 +127,7 @@ class Application
 
         for (pkgCache::PkgIterator pkg = cache->PkgBegin(); !pkg.end(); pkg++) {
             
-            if (IsVirtual(pkg)) {
+            if (is_virtual(pkg)) {
               continue;
             }
 
@@ -152,7 +151,6 @@ class Application
                     prvmap[pname].push_back(oname);
                 }
             }
-
         }
 
         //main targets
@@ -161,7 +159,7 @@ class Application
             string vname;
 
             try {
-              pkg = Find(target);
+              pkg = find(target);
             }
             catch (runtime_error e) {
                 
@@ -170,9 +168,9 @@ class Application
                 continue;
             }
 
-            if (IsVirtual(pkg)) {
+            if (is_virtual(pkg)) {
                 try {
-                    vname = ResolveProvide(target);
+                    vname = resolve_provide(target);
                 }
                 catch (runtime_error e) {
                     
@@ -182,12 +180,12 @@ class Application
                 }
 
                 //using provided name
-                pkg = Find (vname);
+                pkg = find (vname);
             }
 
             depmap[pkg.Name ()] = "";
             cout << "[ 0]->" << pkg.Name() << endl;
-            Build (pkg.VersionList(), 1);
+            build (pkg.VersionList(), 1);
         }
 
         map <string,pkgCache::DepIterator> newdep;
@@ -292,19 +290,19 @@ class Application
 
             pkgCache::PkgIterator pkg = q.second.TargetPkg();
 
-            if (IsVirtual(pkg)) {
+            if (is_virtual(pkg)) {
                 try {
                     string pkgname = pkg.Name();
-                    string vname = ResolveProvide(pkgname);
+                    string vname = resolve_provide(pkgname);
                     cout << pkgname << " is a virtual package, using " <<
                         vname << endl;
 
                     if (bootstrap.find(vname) == bootstrap.end()) {
                         if (depmap.find(vname) == depmap.end()) {
-                            pkgCache::PkgIterator provider = Find(vname);
+                            pkgCache::PkgIterator provider = find(vname);
 
                             depmap[vname] = "";
-                            Build (provider.VersionList(), 0);
+                            build (provider.VersionList(), 0);
                         }
                     }
                 }
@@ -317,7 +315,7 @@ class Application
             }
             else {
                 depmap[pkg.Name()] = "";
-                Build (pkg.VersionList(), 0);
+                build (pkg.VersionList(), 0);
             }
         }
 
@@ -365,7 +363,7 @@ class Application
        Finds a package iterator from apt cache
        \param pkgname string matching package name
      */
-    pkgCache::PkgIterator Find(string pkgname)
+    pkgCache::PkgIterator find(string pkgname)
     {
         pkgCache::PkgIterator pkg = cache->FindPkg(pkgname);
 
@@ -381,7 +379,7 @@ class Application
        \param ver Version start point
        \param depth used for debugging, use 0
      */
-    void Build(pkgCache::VerIterator ver, int depth)
+    void build(pkgCache::VerIterator ver, int depth)
     {
         bool last_or = false;
 
@@ -410,15 +408,15 @@ class Application
                 pkgCache::PkgIterator pkg = dep.TargetPkg();
                 string pkgname = pkg.Name();
 
-                if (IsVirtual(pkg)) {
+                if (is_virtual(pkg)) {
                     try {
-                        string vname = ResolveProvide (pkgname);
+                        string vname = resolve_provide (pkgname);
                         cout << pkgname <<
                             " is a virtual package, using " << vname << endl;
 
                         if (bootstrap.find(vname) == bootstrap.end()) {
                             if (depmap.find(vname) == depmap.end()) {
-                                pkgCache::PkgIterator provider = Find(vname);
+                                pkgCache::PkgIterator provider = find(vname);
 
                                 depmap[vname] = "";
                                 cout << "[" << setw (2) << depth << "]";
@@ -426,7 +424,7 @@ class Application
                                     cout << "-";
                                 }
                                 cout << "->" << vname << endl;
-                                Build (provider.VersionList(), depth + 1);
+                                build (provider.VersionList(), depth + 1);
                             }
                         }
                     }
@@ -451,7 +449,7 @@ class Application
                                         cout << "-";
                                     }
                                     cout << "->" << pkgname << endl;
-                                    Build (ver, depth + 1);
+                                    build (ver, depth + 1);
                                 }
                                 break;
                             }
@@ -465,7 +463,7 @@ class Application
     /*!
        Resolves a provide
      */
-    string ResolveProvide(string prvname)
+    string resolve_provide(string prvname)
     {
         string ret = "";
 
@@ -500,7 +498,7 @@ class Application
     /*!
        Checks whenever a package is virtual
      */
-    bool IsVirtual(pkgCache::PkgIterator pkg)
+    bool is_virtual(pkgCache::PkgIterator pkg)
     {
         pkgCache::VerIterator ver = pkg.VersionList();
 
@@ -510,7 +508,7 @@ class Application
     /*!
        Dump result
      */
-    void Dump()
+    void dump()
     {
         if (filename != "") {
             cout << "Output to: " << filename << endl;
@@ -532,7 +530,7 @@ class Application
         }
     }
 
-    void PrintUsage()
+    void print_usage()
     {
         cout << "usage: " << endl;
         cout << "lliurex-resolver [OPTIONS]" << endl;
@@ -550,7 +548,7 @@ class Application
 int main (int argc, char *argv[])
 {
     Application app(argc, argv);
-    app.Dump();
+    app.dump();
 
     return 0;
 }
