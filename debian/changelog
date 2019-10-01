@@ -1,3 +1,13 @@
+lliurex-resolver (1.2.0.0) bionic; urgency=medium
+
+  * Master tag: e8fae358c69a7f9d86c5ed0afa84de7fe6c88df2
+  * cmake script checks for libapt-pkg lib, as there is no pkg-config support for this
+  * cmake uses release default settings, no longer hardcoded
+  * code indent and naming has been updated to match edupals/lliurex guidelines
+  * removed pkg-config dependency as it is not used by libapt-pkg, the only linked library
+
+ -- Enrique Medina Gremaldos <quiqueiii@gmail.com>  Tue, 01 Oct 2019 12:56:49 +0200
+
 lliurex-resolver (1.1.3) bionic; urgency=medium
 
   * Upload to bionic
