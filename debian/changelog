@@ -1,3 +1,10 @@
+lliurex-resolver (1.3.0.0) bionic; urgency=medium
+
+  * Master tag: cb9159747c2cbca98a7f9f5e8fefa7b23f4d93bc
+  * Added a new option to add bootstrap with recomputed dependencies
+
+ -- Enrique Medina Gremaldos <quiqueiii@gmail.com>  Mon, 08 Jun 2020 20:04:22 +0200
+
 lliurex-resolver (1.2.0.0) bionic; urgency=medium
 
   * Master tag: e8fae358c69a7f9d86c5ed0afa84de7fe6c88df2
