@@ -31,7 +31,7 @@ using namespace std;
 
 enum class Option
 { None = 0, UseInput = 1, UseOutput = 2, UseBanned = 4,
-    Verbose = 8, DumpProvide = 16, AddBootstrap = 32 };
+    Verbose = 8, DumpProvide = 16, AddBootstrap = 32, ComputeBootstrap = 64 };
 
 class Application
 {
@@ -47,8 +47,9 @@ class Application
     string filename;
     bool dump_provide;
     bool add_bootstrap;
+    bool compute_bootstrap;
 
-    pkgCache *cache;
+    pkgCache* cache;
 
     /*!
        Constructor
@@ -63,6 +64,7 @@ class Application
         filename = "";
         dump_provide = false;
         add_bootstrap = false;
+        compute_bootstrap = false;
 
         if (argc < 2) {
             print_usage();
@@ -100,7 +102,13 @@ class Application
                 add_bootstrap = true;
                 continue;
             }
-
+            
+            if (arg == "-c") {
+                option = Option::ComputeBootstrap;
+                compute_bootstrap = true;
+                continue;
+            }
+            
             switch (option) {
                 case Option::UseOutput:
                     filename = arg;
@@ -153,6 +161,15 @@ class Application
             }
         }
 
+        if (compute_bootstrap) {
+            //ignore add bootsrap option
+            add_bootstrap=false;
+            
+            for (std::pair<string,string> package : bootstrap) {
+                targets.push_back(package.first);
+            }
+        }
+        
         //main targets
         for (string target:targets) {
             pkgCache::PkgIterator pkg;
@@ -540,6 +557,7 @@ class Application
         cout << "-i <targets>\tInput packages" << endl;
         cout << "-o <file>\tOutput file" << endl;
         cout << "-d adds bootstrap to output list" << endl;
+        cout << "-c adds bootstrap to output list recomputing dependency tree. This will ignore -d" << endl;
         cout << "-b <targets>\tPackages to avoid" << endl;
         cout << "-p\tDumps provide list" << endl;
     }
