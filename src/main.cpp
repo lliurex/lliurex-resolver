@@ -17,8 +17,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <apt-pkg/init.h>
 #include <apt-pkg/cachefile.h>
 #include <apt-pkg/pkgcache.h>
+#include <apt-pkg/pkgsystem.h>
 
 #include <iostream>
 #include <fstream>
