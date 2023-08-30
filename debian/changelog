@@ -1,3 +1,10 @@
+lliurex-resolver (1.3.2.0) jammy; urgency=medium
+
+  * Master tag: 10149de3d2fc3e59ab9f4a1aad586736ae7f3dfe
+  * Moved CMake requirement to greater than 3.0
+
+ -- Enrique Medina Gremaldos <quiqueiii@gmail.com>  Wed, 30 Aug 2023 13:25:49 +0200
+
 lliurex-resolver (1.3.1.0) focal; urgency=medium
 
   * Master tag: 4dbf4acf0488b41c44cb8f19d76d5917978ac9ed

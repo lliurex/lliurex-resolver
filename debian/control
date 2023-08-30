@@ -2,7 +2,7 @@ Source: lliurex-resolver
 Section: x11
 Priority: optional
 Maintainer: LliureX Team <lliurex@gva.es>
-Build-Depends: cdbs, debhelper (>= 10), cmake (>= 2.8.0), libapt-pkg-dev
+Build-Depends: cdbs, debhelper (>= 10), cmake (>= 3.0), libapt-pkg-dev
 Standards-Version: 4.1.2
 
  
